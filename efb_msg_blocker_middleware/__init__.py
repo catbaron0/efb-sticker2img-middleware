@@ -120,7 +120,7 @@ class MessageBlockerMiddleware(EFBMiddleware):
             self.logger.info("Add filters: %s", filter_text)
             self.db.add_filter(message, filter_text)
             self.update_filters(message)
-            filter_text = self.db.Filter.select().where(self.db.Filter.filter_text == filter_text)[0].__data__
+            filter_text = self.select_filters(message).where(self.db.Filter.filter_text == filter_text)[0].__data__
             reply_text = f"Filter added: {filter_text}"
         else:
             reply_text = f"Failed to add filter. Filter is empty."
@@ -156,8 +156,10 @@ class MessageBlockerMiddleware(EFBMiddleware):
         self.update_filters(message)
         return self.reply_msg(message, reply_text)
 
-    def select_filters(self, author_channel_id: str, chat_chat_uid: str):
+    def select_filters(self, message: EFBMsg):
         filters = None
+        author_channel_id: str = message.chat.channel_id
+        chat_chat_uid: str = message.chat.chat_uid
         filters = self.db.Filter.select().where(
             self.db.Filter.author_channel_id == author_channel_id,
             self.db.Filter.chat_chat_uid == chat_chat_uid
@@ -168,7 +170,7 @@ class MessageBlockerMiddleware(EFBMiddleware):
         self.logger.info('Update filter')
         author_channel_id: str = message.chat.channel_id
         chat_chat_uid: str = message.chat.chat_uid
-        filters = self.select_filters(author_channel_id, chat_chat_uid)
+        filters = self.select_filters(message)
         self.filters[(author_channel_id, chat_chat_uid)] = filters
         # try:
         #     filters = self.db.Filter.select(
@@ -292,6 +294,6 @@ class MessageBlockerMiddleware(EFBMiddleware):
         if msg_pass == True:
             return message
         else:
-            print('Message blocked!')
+            # print('Message blocked!')
             self.logger.info('Message blocked: %s', message.__dict__)
             return None
