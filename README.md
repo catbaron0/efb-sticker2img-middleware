@@ -1,6 +1,5 @@
 # MessageBLocker: A middleware for EFB 
 
--------
 ## Notice
 
 **Middleware ID**: `catbaron.message_blocker`
@@ -10,8 +9,6 @@
 Be aware that this is a very early develop version. Please let me know if you found any problem.
 
 You need to use **MessageBlocker** on top of [EFB](https://ehforwarderbot.readthedocs.io). Please check the document and install EFB firset.
-
--------
 
 ## Dependense
 
@@ -56,12 +53,7 @@ Three commands are supported by this middleware.
 
 `id` is the unique ID for this filter, and `filter_text` is the content of this filter. The others are information about chat where the filter is active.
 
-* `\del {id}`: Delete a filter with filter `id`. e.g.
-
-```
-\del 1
-```
-
+* `\del {id}`: Delete a filter with filter `id`. (e.g. `\del 1`)
 * `\add {arg}`: Add filters. There are some ways to add filters.
     
     * `arg` is one of any  supported `type`, so that all the messages in the specific type will be blocked. For example `\add image` adds a filter to block all the image messages.
