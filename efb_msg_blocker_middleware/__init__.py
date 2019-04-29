@@ -25,7 +25,7 @@ from . import __version__ as version
 from abc import ABC, abstractmethod
 
 # class WeChatChannel(EFBChannel):
-class BlockMiddleware(EFBMiddleware):
+class MessageBlockerMiddleware(EFBMiddleware):
     """
     EFB Middleware - MessageBlockerMiddleware
     Add and manage filters to block some messages.
@@ -37,7 +37,7 @@ class BlockMiddleware(EFBMiddleware):
     # chat_channel_id: the channel where the chat blongs to (wechat for instanfce)
     # chat_chat_uid: the chat where the msg blongs to (the wechat group for instance)
 
-    middleware_id = "catbaron.message_blocker"
+    middleware_id = "catbaron.msg_blocker"
     middleware_name = "Message Blocker Middleware"
     __version__ = version.__version__
     logger: logging.Logger = logging.getLogger("plugins.%s.MessageBlockerMiddleware" % middleware_id)
@@ -84,13 +84,17 @@ class BlockMiddleware(EFBMiddleware):
     def cmd_add_filter(self, message: EFBMsg, cmd: str) -> EFBMsg:
         cmd = cmd.lower()
         self.logger.info("Add filters")
+        self.logger.info("filter_text:", cmd)
         filters = dict()
         if cmd:
             if cmd in self.types:
-                filters['type'] = ['image']
+                filters['type'] = [cmd]
             else:
                 self.logger.info("Filters of cmd: %s", cmd)
                 filters = eval(cmd)
+                if not isinstance(filters, dict):
+                    reply_text = f"Failed to add filter. Invalid filter text. "
+                    return self.reply_msg(message, reply_text)
             # try:
             #     self.logger.info("Filters of cmd: %s", cmd)
             #     filter_cmd: dict = eval(cmd)
