@@ -70,12 +70,20 @@ class MessageBlockerMiddleware(EFBMiddleware):
 
     def cmd_list_filter(self, message: EFBMsg, cmd: str) -> EFBMsg:
         '''list filter for current chat.'''
-        filters_text = []
+        filters_data = []
+        target = message.target
         self.logger.info("List filters")
         filters = self.get_filters(message)
-        for fi in filters:
-            filters_text.append(str(fi.__data__))
-        reply_text = '\n'.join(filters_text)
+        if not target:
+            for fi in filters:
+                filters_data.append(str(fi.__data__))
+        else:
+            uid = target.author.chat_uid
+            for fi in filters:
+                if uid == eval(fi.filter_text).get('user', ''):
+                    filters_data.append(str(fi.__data__))
+
+        reply_text = '\n'.join(filters_data)
         if not reply_text:
             reply_text = 'No filter was found.'
         msg = self.reply_msg(message, reply_text)
@@ -104,13 +112,14 @@ class MessageBlockerMiddleware(EFBMiddleware):
             #     return self.reply_msg(message, '\n'.join(reply_text))
         if message.target:
             self.logger.info("Filters to user: %s", message.target.author.chat_name)
+            message.chat.chat_name = message.target.chat.chat_name
             filters['user'] = str(message.target.author.chat_uid)
 
         if filters:
             filter_text: str = json.dumps(filters)
             self.logger.info("Add filters: %s", filter_text)
             self.db.add_filter(message, filter_text)
-            self.update_filter(message)
+            self.update_filters(message)
             filter_text = self.db.Filter.select().where(self.db.Filter.filter_text == filter_text)[0].__data__
             reply_text = f"Filter added: {filter_text}"
         else:
@@ -120,10 +129,22 @@ class MessageBlockerMiddleware(EFBMiddleware):
         return self.reply_msg(message, reply_text)
 
     def cmd_del_filter(self, message: EFBMsg, filter_id: str) -> EFBMsg:
-        self.logger.info('Delete filter')
-        filter_id = int(filter_id)
-        reply_text = 'Filter deleted: %s' % self.db.Filter.get(id=filter_id).__data__
-        self.db.delete_filter(filter_id = filter_id)
+        target = message.target
+        author_channel_id: str = message.chat.channel_id
+        chat_chat_uid: str = message.chat.chat_uid
+        if not filter_id and target:
+            filter_data = []
+            for fi in self.select_filters(author_channel_id, chat_chat_uid):
+                filter_dict = eval(fi.filter_text)
+                if filter_dict.get('user', '') == target.author.chat_uid:
+                    filter_data.append(str(fi.__data__))
+                    fi.delete_instance()
+            reply_text = 'Filter deleted: %s' % '\n'.join(filter_data)
+        else:
+            self.logger.info('Delete filter')
+            filter_id = int(filter_id)
+            reply_text = 'Filter deleted: %s' % self.db.Filter.get(id=filter_id).__data__
+            self.db.delete_filter(filter_id = filter_id)
         # try:
         #     filter_id = int(filter_id)
         #     reply_text = 'Filter deleted: %s' % self.db.Filter.get(id=filter_id).__data__
@@ -132,19 +153,22 @@ class MessageBlockerMiddleware(EFBMiddleware):
         #     reply_text = 'Failed to delete filter: %s' % str(e)
         #     self.logger.info(reply_text)
         self.logger.info(reply_text)
-        self.update_filter(message)
+        self.update_filters(message)
         return self.reply_msg(message, reply_text)
 
-    def update_filter(self, message: EFBMsg):
+    def select_filters(self, author_channel_id: str, chat_chat_uid: str):
+        filters = None
+        filters = self.db.Filter.select().where(
+            self.db.Filter.author_channel_id == author_channel_id,
+            self.db.Filter.chat_chat_uid == chat_chat_uid
+        )
+        return filters
+
+    def update_filters(self, message: EFBMsg):
         self.logger.info('Update filter')
         author_channel_id: str = message.chat.channel_id
         chat_chat_uid: str = message.chat.chat_uid
-        reply_text: list = list()
-        filters = None
-        filters = self.db.Filter.select().where(
-        self.db.Filter.author_channel_id == author_channel_id,
-        self.db.Filter.chat_chat_uid == chat_chat_uid
-        )
+        filters = self.select_filters(author_channel_id, chat_chat_uid)
         self.filters[(author_channel_id, chat_chat_uid)] = filters
         # try:
         #     filters = self.db.Filter.select(
@@ -158,7 +182,7 @@ class MessageBlockerMiddleware(EFBMiddleware):
 
     def get_filters(self, message: EFBMsg):
         key = (message.chat.channel_id,  message.chat.chat_uid)
-        return self.filters.get(key, self.update_filter(message))
+        return self.filters.get(key, self.update_filters(message))
 
     def load_config(self):
         config_path = get_config_path(self.middleware_id)
@@ -180,7 +204,7 @@ class MessageBlockerMiddleware(EFBMiddleware):
             return False
 
     def match_msg(self, message: EFBMsg, filter_dict) -> bool:
-        if 'user_id' not in filter_dict \
+        if 'user' not in filter_dict \
                 and 'text' not in filter_dict \
                 and 'type' not in filter_dict:
             return False
@@ -188,8 +212,8 @@ class MessageBlockerMiddleware(EFBMiddleware):
         author = message.author
         chat = message.chat
         match_user, match_text, match_type = True, True, True
-        if 'user_id' in filter_dict:
-            if filter_dict['user_id'] != author.chat_uid:
+        if 'user' in filter_dict:
+            if filter_dict['user'] != author.chat_uid:
                 match_user = False
         if 'text' in filter_dict:
             k = re.compile(str(filter_dict['text']))
@@ -210,11 +234,11 @@ class MessageBlockerMiddleware(EFBMiddleware):
                     or 'unsupported' in types and m_type == MsgType.Unsupported):
                 match_type = False
         if match_user:
-            logger.info('user_id matched')
+            self.logger.info('user_id matched')
         if match_type:
-            logger.info('type matched')
+            self.logger.info('type matched')
         if match_text:
-            logger.info('text matched')
+            self.logger.info('text matched')
         match = match_user and match_text and match_type
         return match
 
@@ -228,6 +252,16 @@ class MessageBlockerMiddleware(EFBMiddleware):
         Returns:
             Optional[:obj:`.EFBMsg`]: Processed message or None if discarded.
         """
+        author, chat, target = message.author, message.chat, message.target
+        # print()
+        # print()
+        # print("message", message.__dict__)
+        # print("author:", author.__dict__)
+        # print("chat:", chat.__dict__)
+        # if target:
+        #     print("target:", target.__dict__)
+        #     print("target.author:", target.author.__dict__)
+        #     print("target.target:", target.chat.__dict__)
         msg_text = message.text.strip()
         if self.sent_by_me(message):
             if msg_text.startswith('\\'):
@@ -258,5 +292,6 @@ class MessageBlockerMiddleware(EFBMiddleware):
         if msg_pass == True:
             return message
         else:
-            logger.info('Message filtered: %s', message.__dict__)
+            print('Message blocked!')
+            self.logger.info('Message blocked: %s', message.__dict__)
             return None

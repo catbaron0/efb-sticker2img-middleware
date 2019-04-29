@@ -47,13 +47,16 @@ Three commands are supported by this middleware.
 
 * `\list`: List all the filters you have added to one chat. The EFB will reply to you with a list of `json` string. e.g.:
 
-```
-{'id': 1, 'author_channel_id': 'blueset.wechat', 'author_channel_name': 'WeChat Slave', 'author_chat_name': '', 'author_chat_alias': 'None', 'chat_chat_uid': 'c00003', 'chat_chat_name': '', 'chat_chat_alias': 'None', 'filter_text': '{"type": ["image"], "user": "12345"}'}
-```
+    ```
+    {'id': 1, 'author_channel_id': 'blueset.wechat', 'author_channel_name': 'WeChat Slave', 'author_chat_name': '', 'author_chat_alias': 'None', 'chat_chat_uid': 'c00003', 'chat_chat_name': '', 'chat_chat_alias': 'None', 'filter_text': '{"type": ["image"], "user": "12345"}'}
+    ```
 
-`id` is the unique ID for this filter, and `filter_text` is the content of this filter. The others are information about chat where the filter is active.
+    `id` is the unique ID for this filter, and `filter_text` is the content of this filter. The others are information about chat where the filter is active.
+    
+    You can reply `\list` to a message to check all the filters you added to the author of message.
 
-* `\del {id}`: Delete a filter with filter `id`. (e.g. `\del 1`)
+
+* `\del {id}`: Delete a filter with filter `id`. (e.g. `\del 1`). You can delete all the filters you added to a user by replying `\del` to his/her message.
 * `\add {arg}`: Add filters. There are some ways to add filters.
     
     * `arg` is one of any  supported `type`, so that all the messages in the specific type will be blocked. For example `\add image` adds a filter to block all the image messages.

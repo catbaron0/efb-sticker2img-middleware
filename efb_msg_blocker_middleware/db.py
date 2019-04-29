@@ -25,7 +25,7 @@ class DatabaseManager:
             chat_chat_name = CharField()
             chat_chat_alias = CharField()
 
-            filter_text = CharField(unique = True)
+            filter_text = CharField()
 
         self.Filter = Filter
         if not self.Filter.table_exists():
