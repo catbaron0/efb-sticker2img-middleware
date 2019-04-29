@@ -120,7 +120,7 @@ class MessageBlockerMiddleware(EFBMiddleware):
             self.logger.info("Add filters: %s", filter_text)
             self.db.add_filter(message, filter_text)
             self.update_filters(message)
-            filter_text = self.select_filters(message).where(self.db.Filter.filter_text == filter_text)[0].__data__
+            # filter_text = self.select_filters(message).where(self.db.Filter.filter_text == filter_text)[0].__data__
             reply_text = f"Filter added: {filter_text}"
         else:
             reply_text = f"Failed to add filter. Filter is empty."
@@ -134,7 +134,7 @@ class MessageBlockerMiddleware(EFBMiddleware):
         chat_chat_uid: str = message.chat.chat_uid
         if not filter_id and target:
             filter_data = []
-            for fi in self.select_filters(author_channel_id, chat_chat_uid):
+            for fi in self.select_filters(message):
                 filter_dict = eval(fi.filter_text)
                 if filter_dict.get('user', '') == target.author.chat_uid:
                     filter_data.append(str(fi.__data__))
@@ -236,10 +236,13 @@ class MessageBlockerMiddleware(EFBMiddleware):
                     or 'unsupported' in types and m_type == MsgType.Unsupported):
                 match_type = False
         if match_user:
+            # print('user matched')
             self.logger.info('user_id matched')
         if match_type:
+            # print('type matched')
             self.logger.info('type matched')
         if match_text:
+            # print('text matched')
             self.logger.info('text matched')
         match = match_user and match_text and match_type
         return match
@@ -260,10 +263,10 @@ class MessageBlockerMiddleware(EFBMiddleware):
         # print("message", message.__dict__)
         # print("author:", author.__dict__)
         # print("chat:", chat.__dict__)
-        # if target:
-        #     print("target:", target.__dict__)
-        #     print("target.author:", target.author.__dict__)
-        #     print("target.target:", target.chat.__dict__)
+        if target:
+            # print("target:", target.__dict__)
+            # print("target.author:", target.author.__dict__)
+            # print("target.target:", target.chat.__dict__)
         msg_text = message.text.strip()
         if self.sent_by_me(message):
             if msg_text.startswith('\\'):
@@ -281,17 +284,20 @@ class MessageBlockerMiddleware(EFBMiddleware):
                 # normal message, pass it.
                 return message
         # message to be filtered
-        msg_pass = True
+        matched = False
         for fi in self.get_filters(message):
             filter_dict = eval(fi.filter_text)
-            msg_pass = not self.match_msg(message, filter_dict)
+            # print('filter:', filter_dict)
+            matched = self.match_msg(message, filter_dict)
+            if matched:
+                break
             # try:
             #     filter_dict = eval(fi.filter_text)
             #     msg_pass = not filter_msg(message, filter_dict)
             # except Exception as e:
             #     self.logger.info("Failed to load filter: %s", str(e))
             #     pass
-        if msg_pass == True:
+        if matched == False:
             return message
         else:
             # print('Message blocked!')
