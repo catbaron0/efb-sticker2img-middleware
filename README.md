@@ -26,3 +26,18 @@ git clone https://github.com/catbaron0/efb-sticker2img-middleware
 cd efb-sticker2img-middleware
 python setup.py install
 ```
+add this middleware following [here](https://ehforwarderbot.readthedocs.io/en/latest/getting-started.html). It should looks like 
+
+```
+master_channel: foo.demo_master
+slave_channels:
+- foo.demo_slave
+- bar.dummy
+middlewares:
+- foo.null
+- catbaron.sticker2img
+```
+
+you only need to add the last line to your config file.
+
+Restart EFB.
