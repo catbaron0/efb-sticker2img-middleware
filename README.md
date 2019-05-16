@@ -4,9 +4,9 @@
 
 **Middleware ID**: `catbaron.sticker2img`
 
-**Sticker2Img** is a middleware for EFB, to convert stickers and `gif` file to `jpeg` image, if it is sent from master to slave channel. This middleware should solve this [issue](https://github.com/blueset/efb-wechat-slave/issues/48#issue-439681479). 
+**Sticker2Img** is a middleware for EFB, to convert stickers and `gif` files to `jpeg` images, if it is sent from master to slave channel. This middleware should solve this [issue](https://github.com/blueset/efb-wechat-slave/issues/48#issue-439681479). 
 
-If a message has a attatched file whose a `.png` or `.gif` suffix, or if the message type is `sticker`, the attatched file would be converted to `jpeg` image. 
+If a message has a attatched file with a `.png` or `.gif` suffix, or if the message type is `sticker`, the attatched file would be converted to `jpeg` image. 
 Note that the converted `jpeg` file may be in low quality.
 
 Also be aware that this is a very early develop version. Please let me know if you found any problem.
@@ -16,7 +16,7 @@ You need to use **MessageBlocker** on top of [EFB](https://ehforwarderbot.readth
 ## Dependense
 
 * Python >=3.6
-* EFB >=2.0.0
+* EFB >=2.0.0b15
 * pillow
 
 ## Install
@@ -28,7 +28,7 @@ cd efb-sticker2img-middleware
 python setup.py install
 ```
 * Register to EFB
-add this middleware following [this document](https://ehforwarderbot.readthedocs.io/en/latest/getting-started.html). It should looks like 
+Following [this document](https://ehforwarderbot.readthedocs.io/en/latest/getting-started.html) to edit the config file. The config file by default is `~/.ehforwarderbot/profiles/default`. It should look like:
 
 ```
 master_channel: foo.demo_master
