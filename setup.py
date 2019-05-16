@@ -10,7 +10,7 @@ exec(open('efb_sticker2img_middleware/__version__.py').read())
 long_description = open('README.rst').read()
 
 setup(
-    name='efb-sticker2img-middleware',
+    name='efb_sticker2img_middleware',
     packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
     version=__version__,
     description='WeChat Middleware for EH Forwarder Bot to remove image messages',
@@ -39,8 +39,9 @@ setup(
         "python-magic",
         "peewee",
         "PyYaml",
+        "pillow"
     ],
     entry_points={
-        'ehforwarderbot.middleware': 'catbaron.sticker2img = efb_sticker2img_middleware:MessageBlockerMiddleware'
+        'ehforwarderbot.middleware': 'catbaron.sticker2img = efb_sticker2img_middleware:Sticker2ImgMiddleware'
     }
 )
