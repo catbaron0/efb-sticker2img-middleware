@@ -5,12 +5,12 @@ if sys.version_info < (3, 6):
     raise Exception("Python 3.6 or higher is required. Your version is %s." % sys.version)
 
 __version__ = ""
-exec(open('efb_msg_blocker_middleware/__version__.py').read())
+exec(open('efb_sticker2img_middleware/__version__.py').read())
 
 long_description = open('README.rst').read()
 
 setup(
-    name='efb-msg_blocker-middleware',
+    name='efb-sticker2img-middleware',
     packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
     version=__version__,
     description='WeChat Middleware for EH Forwarder Bot to remove image messages',
@@ -41,6 +41,6 @@ setup(
         "PyYaml",
     ],
     entry_points={
-        'ehforwarderbot.middleware': 'catbaron.msg_blocker = efb_msg_blocker_middleware:MessageBlockerMiddleware'
+        'ehforwarderbot.middleware': 'catbaron.sticker2img = efb_sticker2img_middleware:MessageBlockerMiddleware'
     }
 )

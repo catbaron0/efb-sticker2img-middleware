@@ -25,7 +25,7 @@ from . import __version__ as version
 from abc import ABC, abstractmethod
 
 # class WeChatChannel(EFBChannel):
-class MessageBlockerMiddleware(EFBMiddleware):
+class Sticker2ImgMiddleware(EFBMiddleware):
     """
     EFB Middleware - MessageBlockerMiddleware
     Add and manage filters to block some messages.
