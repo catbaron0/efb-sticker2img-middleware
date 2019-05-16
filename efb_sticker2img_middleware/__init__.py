@@ -28,14 +28,13 @@ class Sticker2ImgMiddleware(EFBMiddleware):
 
 
     def __init__(self, instance_id=None):
-        print("Loading Sticker2Img...")
         super().__init__()
         self.types = {'image', 'audio', 'file', 'link', 'location', 'status', 'sticker', 'text', 'video', 'unsupported'}
         self.filters = dict()
 
-    def sent_by_me(self, message: EFBMsg) -> bool:
+    def sent_by_master(self, message: EFBMsg) -> bool:
         author = message.author
-        if author.channel_id == 'blueset.telegram' and author.chat_uid == '__self__':
+        if author and author.module_id and author.module_id == 'blueset.telegram':
             return True
         else:
             return False
@@ -50,7 +49,7 @@ class Sticker2ImgMiddleware(EFBMiddleware):
         Returns:
             Optional[:obj:`.EFBMsg`]: Processed message or None if discarded.
         """
-        if not self.sent_by_me(message):
+        if not self.sent_by_master(message):
             return message
         fn = message.filename.strip()
         if not (message.type == MsgType.Sticker or fn.endswith('.png') or fn.endswith('.gif')):
