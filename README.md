@@ -22,7 +22,7 @@ You need to use **MessageBlocker** on top of [EFB](https://ehforwarderbot.readth
 ## Install
 
 ```
-git clone https://github.com/catbaron/efb-sticker2img-middleware
+git clone https://github.com/catbaron0/efb-sticker2img-middleware
 cd efb-sticker2img-middleware
 python setup.py install
 ```
