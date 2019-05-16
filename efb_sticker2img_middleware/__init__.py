@@ -71,5 +71,4 @@ class Sticker2ImgMiddleware(EFBMiddleware):
         message.type = MsgType.Image
         message.mime = 'image/jpeg'
         message.path = message.file.name
-        print("message modified!")
         return message

@@ -21,12 +21,14 @@ You need to use **MessageBlocker** on top of [EFB](https://ehforwarderbot.readth
 
 ## Install
 
+* Install 
 ```
 git clone https://github.com/catbaron0/efb-sticker2img-middleware
 cd efb-sticker2img-middleware
 python setup.py install
 ```
-add this middleware following [here](https://ehforwarderbot.readthedocs.io/en/latest/getting-started.html). It should looks like 
+* Register to EFB
+add this middleware following [this document](https://ehforwarderbot.readthedocs.io/en/latest/getting-started.html). It should looks like 
 
 ```
 master_channel: foo.demo_master
@@ -34,10 +36,10 @@ slave_channels:
 - foo.demo_slave
 - bar.dummy
 middlewares:
-- foo.null
+- foo.other_middlewares
 - catbaron.sticker2img
 ```
 
-you only need to add the last line to your config file.
+You only need to add the last line to your config file.
 
-Restart EFB.
+* Restart EFB.
