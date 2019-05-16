@@ -51,8 +51,8 @@ class Sticker2ImgMiddleware(EFBMiddleware):
         """
         if not self.sent_by_master(message):
             return message
-        fn = message.filename.strip()
-        if not (message.type == MsgType.Sticker or fn.endswith('.png') or fn.endswith('.gif')):
+        fn = message.filename
+        if not (message.type == MsgType.Sticker or (fn and (fn.endswith('.png') or fn.endswith('.gif')))):
             return message
         filename = message.filename
         self.logger.info(f"Converting {filename} to JPEG...")
