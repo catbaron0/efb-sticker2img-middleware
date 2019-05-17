@@ -7,7 +7,7 @@ if sys.version_info < (3, 6):
 __version__ = ""
 exec(open('efb_sticker2img_middleware/__version__.py').read())
 
-long_description = open('README.rst').read()
+long_description = open('README.md').read()
 
 setup(
     name='efb_sticker2img_middleware',
@@ -36,9 +36,6 @@ setup(
     install_requires=[
         "ehforwarderbot>=2.0.0b15",
         "python-telegram-bot>=10.0.0<12.0.0",
-        "python-magic",
-        "peewee",
-        "PyYaml",
         "pillow"
     ],
     entry_points={
