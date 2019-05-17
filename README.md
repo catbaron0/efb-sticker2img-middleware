@@ -28,6 +28,7 @@ cd efb-sticker2img-middleware
 python setup.py install
 ```
 * Register to EFB
+
 Edit the config file following [this document](https://ehforwarderbot.readthedocs.io/en/latest/getting-started.html) to register this middleware. The config file by default is `~/.ehforwarderbot/profiles/default/config.yaml`. It should look like:
 
 ```
