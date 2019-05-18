@@ -11,7 +11,7 @@ Note that the converted `jpeg` file may be in low quality.
 
 Also be aware that this is a very early develop version. Please let me know if you found any problem.
 
-You need to use *Sticker2Img** on top of [EFB](https://ehforwarderbot.readthedocs.io). Please check the document and install EFB first.
+You need to use **Sticker2Img** on top of [EFB](https://ehforwarderbot.readthedocs.io). Please check the document and install EFB first.
 
 ## Dependense
 
