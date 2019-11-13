@@ -13,7 +13,7 @@
 If a message has a attatched file with a `.png` or `.gif` suffix, or if the message type is `sticker`, the attatched file would be converted to `jpeg` image. 
 Note that the converted `jpeg` file may be in low quality.
 
-Also be aware that this is a very early develop version. Please let me know if you found any problem.
+Also be aware that this is a very early develop version. Please let me know if you meet any trouble.
 
 You need to use **Sticker2Img** on top of [EFB](https://ehforwarderbot.readthedocs.io). Please check the document and install EFB first.
 
