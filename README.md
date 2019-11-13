@@ -1,5 +1,9 @@
 # Sticker2Img: A middleware for EFB 
 
+**Since the function of this middleware has been achieved by EWS, this middleware is unnecessary any more.**
+**And it has been a long time after the last update on this middleware.**
+**It is recommanded to update EFB/ETM/EWS to the latest version.**
+
 ## Notice
 
 **Middleware ID**: `catbaron.sticker2img`
