@@ -1,5 +1,9 @@
 # Sticker2Img: A middleware for EFB 
 
+**Since the function of this middleware has been achieved by EWS, this middleware is unnecessary any more.**
+**And it has been a long time after the last update on this middleware.**
+**It is recommanded to update EFB/ETM/EWS to the latest version.**
+
 ## Notice
 
 **Middleware ID**: `catbaron.sticker2img`
@@ -9,9 +13,9 @@
 If a message has a attatched file with a `.png` or `.gif` suffix, or if the message type is `sticker`, the attatched file would be converted to `jpeg` image. 
 Note that the converted `jpeg` file may be in low quality.
 
-Also be aware that this is a very early develop version. Please let me know if you found any problem.
+Also be aware that this is a very early develop version. Please let me know if you meet any trouble.
 
-You need to use **MessageBlocker** on top of [EFB](https://ehforwarderbot.readthedocs.io). Please check the document and install EFB first.
+You need to use **Sticker2Img** on top of [EFB](https://ehforwarderbot.readthedocs.io). Please check the document and install EFB first.
 
 ## Dependense
 
@@ -28,7 +32,8 @@ cd efb-sticker2img-middleware
 python setup.py install
 ```
 * Register to EFB
-Following [this document](https://ehforwarderbot.readthedocs.io/en/latest/getting-started.html) to edit the config file. The config file by default is `~/.ehforwarderbot/profiles/default`. It should look like:
+
+Edit the config file following [this document](https://ehforwarderbot.readthedocs.io/en/latest/getting-started.html) to register this middleware. The config file by default is `~/.ehforwarderbot/profiles/default/config.yaml`. It should look like:
 
 ```
 master_channel: foo.demo_master

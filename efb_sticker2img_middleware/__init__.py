@@ -57,7 +57,8 @@ class Sticker2ImgMiddleware(EFBMiddleware):
         filename = message.filename
         self.logger.info(f"Converting {filename} to JPEG...")
         sticker = Image.open(message.file.file.raw)
-        img = sticker.convert('RGB')
+        img = Image.new("RGB", sticker.size, (256, 256, 256))
+        img.paste(sticker, sticker)
 
         # Create a new file 
         message.file.close()
