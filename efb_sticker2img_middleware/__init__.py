@@ -21,8 +21,8 @@ class Sticker2ImgMiddleware(EFBMiddleware):
     # chat_channel_id: the channel where the chat blongs to (wechat for instanfce)
     # chat_chat_uid: the chat where the msg blongs to (the wechat group for instance)
 
-    middleware_id = "catbaron.msg_blocker"
-    middleware_name = "Message Blocker Middleware"
+    middleware_id = "catbaron.sticker2img"
+    middleware_name = "Sticker2Image"
     __version__ = version.__version__
     logger: logging.Logger = logging.getLogger("plugins.%s.MessageBlockerMiddleware" % middleware_id)
 
